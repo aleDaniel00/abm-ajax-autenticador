@@ -7,6 +7,7 @@ class Usuario {
 	private $ID_USUARIO;
 	private $NOMBRE;
 	private $PASSWORD;
+	private $PASSWORD_encriptado = password_hash($PASSWORD, PASSWORD_DEFAULT);
 			
 	public function __construct($id = null) {
 		if(!is_null($id)) {
@@ -22,13 +23,13 @@ class Usuario {
 	public static function login($mail,$pwd){
 		$query = "SELECT * FROM usuarios WHERE NOMBRE = ? AND PASSWORD = ?";
 		$stmt = DBConnection::getStatement($query);
-		
 		$stmt->execute(array($mail,$pwd));
-	
 		return $stmt->fetch();
 		
 	}
 	public function cargarDeArray($fila) {
+		var_dump('hola');
+		var_dump($fila['PASSWORD']);
 		foreach($fila as $prop => $valor) {
 			$this->$prop = $valor;
 		}
@@ -49,10 +50,11 @@ class Usuario {
 					(NOMBRE,PASSWORD)
 		    	VALUES(:nom,:pass);";
 		$stmt = DBConnection::getStatement($query);
+		var_dump($this);	
 		$exito = $stmt->execute(
 			array(
 				':nom' => $this->NOMBRE,
-				':pass' => $this->PASSWORD
+				':pass' => $this->PASSWORD_encriptado
 			)				
 		);
 		
@@ -81,12 +83,8 @@ class Usuario {
 					SET 
 						NOMBRE=:nom,
 						PASSWORD=:pass
-												
 					WHERE ID_USUARIO = :id
 				;";
-		
-	
-		
 		$stmt = DBConnection::getStatement($query);
 		$exito = $stmt->execute(
 			array(
@@ -111,7 +109,6 @@ class Usuario {
 	
 
 	public static  function borrar($id) {
-		
 		$query = "DELETE FROM usuarios WHERE ID_USUARIO = ?;";
 		$stmt = DBConnection::getStatement($query);
 		$stmt->fetch(PDO::FETCH_ASSOC);
@@ -142,6 +139,7 @@ class Usuario {
 	}
 	
 	function getPASSWORD() {
+
 		return $this->PASSWORD;
 	}
 

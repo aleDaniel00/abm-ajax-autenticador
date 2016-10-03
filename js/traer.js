@@ -59,19 +59,9 @@ function traer_forms(){
 					$('tituloForm').textContent = 'Registrate';
 					$('traerFormRegistroUser').textContent = 'Login';
 					var altaUsuarioBtn = $('altaUsuarioBtn');
-					addEvent(altaUsuarioBtn,'click',function (){
-						validarFormNewUser();
-						ajaxRequest({
-							metodo:'post',
-							url:'GestionUsr/agregarUsr.php',
-							data: getFormAltaData(),
-							success:function(rta){
-								rta = JSON.parse(rta);
-								var div = $('exito');
-								div.innerHTML = rta.message;
-							}
-						});
-					});
+					console.info($('formNewUser'))
+
+					addEvent($('formNewUser'),'submit',validarFormNewUser);
 				}
 			}				
 			if($('traerFormRegistroUser').innerHTML == 'Login'){
@@ -87,7 +77,9 @@ function traer_forms(){
 								borro_form_actual();
 								var div = $('contenidoSinLogin');
 								div.innerHTML = rta;
-								
+								if($('formLogin')){
+									addEvent(formLogin,'submit',validarLogin);	
+								}
 								removeEvent(verFormRegistroUser,'click',verNuevoForm)
 								cambio_textos();
 							}
@@ -346,7 +338,7 @@ function getFormAltaDataProd() {
 				'&PRECIO=' + $('aAltaPrecioProd').value;
 	}
 function validarLogin(event){
-	if(formLogin.NOMBRE.value == '' || formLogin.PASSWORD.value == ''){
+	if($('formLogin').NOMBRE.value == '' || $('formLogin').PASSWORD.value == ''){
 		event.preventDefault();
 		$('errorUsual').getElementsByTagName('p')[0].innerHTML = 'Te falto llenar uno de los campos';
 		var z = setInterval(function () {
@@ -361,10 +353,11 @@ function validarLogin(event){
 	}
 }
 function validarFormNewUser(event){
-	alert();	event.preventDefault();
-	c(event)
-	if(formNewUser.NOMBRE.value == '' || formNewUser.PASSWORD.value == ''){
 	
+	
+	if($('formNewUser').NOMBRE.value == '' || $('formNewUser').PASSWORD.value == ''){
+		
+		event.preventDefault();
 		$('errorUsual').getElementsByTagName('p')[0].innerHTML = 'Te falto llenar uno de los campos';
 		var z = setInterval(function () {
 			$('errorUsual').getElementsByTagName('p')[0].style.top = '-15%';
@@ -375,7 +368,18 @@ function validarFormNewUser(event){
 		$('errorUsual').getElementsByTagName('p')[0].style.top = '10%';
 		$('errorUsual').style.width = '100%';
 		$('errorUsual').style.height = '25%';
-	}
+	}/*else{
+		ajaxRequest({
+			metodo:'post',
+			url:'GestionUsr/agregarUsr.php',
+			data: getFormAltaData(),
+			success:function(rta){
+				rta = JSON.parse(rta);
+				var div = $('exito');
+				div.innerHTML = rta.message;
+			}
+		});
+	}*/
 }
 function hacerAlgo(){
 	var verFormRegistroUser = $('traerFormRegistroUser');
@@ -399,8 +403,3 @@ function hacerAlgo(){
 		addEvent(abm_prods,'click',traer_abm_prods);	
 	}
 }
-
-// animacion  al menu principal
-
-
-// animacion  al menu principal

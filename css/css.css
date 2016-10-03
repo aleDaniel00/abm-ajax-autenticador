@@ -1,5 +1,5 @@
 body {
-    background: rgba(255, 255, 255, 0.24);
+    background: rgb(38, 38, 38);
     font-family: "Fira Sans", "Source Sans Pro", Helvetica, Arial, sans-serif;
     font-size: 22px;
     color: black;
@@ -342,11 +342,13 @@ p {
     font-size: 12px;
     margin: 0px auto;
     padding: 5px;
+    border-radius: 0 0 5px 6px;
 }
 
 .encabezadoLogin {
     margin: 0 auto;
     padding: 27px 10px;
+    padding-bottom: 0;
     border-bottom: 1px solid #c20000;
     /* height: 59px; */
     border: 0px solid rgba(125, 125, 125, 0.09);
@@ -2709,7 +2711,7 @@ form#formLogin > div {
 form#formNewUser > div:nth-child(1),form#formNewUser > div:nth-child(2) {
     /* background: red; */
     /* border-bottom: 1px solid #f1f1f1; */
-    padding-top: 11px;
+    padding-top: 0;
     text-align: left;
     width: 100%;
 }
@@ -2842,7 +2844,7 @@ a#abm_users,#abm_prods {
 
 ul#lista_users_abm, ul#lista_prods_abm {
     background: rgb(255, 255, 255);
-    margin: 18px 0;
+    margin: 0;
     border-radius: 3px;
     width: 99.5%;
 }
@@ -3274,23 +3276,26 @@ ul#contenedor_items {
 
 div#errorUsual {
     position: fixed;
-    background: rgba(38, 38, 38, 0.9);
+    background: rgb(38, 38, 38);
     left: 0;
     top: 0;
     transition: 1s;
+    margin: 0;
 }
 
 div#errorUsual > p {
     position: fixed;
-    width: 278px;
+    width: 500px;
     background: #ffffff;
     height: auto;
     top: 33%;
-    left: 39%;
+    left: 50%;
     border-radius: 5px;
     padding: 10px;
     color: #636363;
     top: -34%;
+    text-align: center;
+    margin-left: -250px;
     transition: 1s;
     font-size: 1.5em;
     /* border: 1px solid rgb(251, 112, 112); */
