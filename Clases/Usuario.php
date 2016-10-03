@@ -7,7 +7,7 @@ class Usuario {
 	private $ID_USUARIO;
 	private $NOMBRE;
 	private $PASSWORD;
-	private $PASSWORD_encriptado = password_hash($PASSWORD, PASSWORD_DEFAULT);
+	
 			
 	public function __construct($id = null) {
 		if(!is_null($id)) {
@@ -28,9 +28,15 @@ class Usuario {
 		
 	}
 	public function cargarDeArray($fila) {
-		var_dump('hola');
-		var_dump($fila['PASSWORD']);
+		var_dump(phpversion());
+		//phpversion();
+		
 		foreach($fila as $prop => $valor) {
+			var_dump($fila);
+			
+			if($prop == 'PASSWORD'){
+				//$prop = password_hash($fila,PASSWORD_DEFAULT);
+			}
 			$this->$prop = $valor;
 		}
 	}
@@ -50,11 +56,11 @@ class Usuario {
 					(NOMBRE,PASSWORD)
 		    	VALUES(:nom,:pass);";
 		$stmt = DBConnection::getStatement($query);
-		var_dump($this);	
+		
 		$exito = $stmt->execute(
 			array(
 				':nom' => $this->NOMBRE,
-				':pass' => $this->PASSWORD_encriptado
+				':pass' => $this->PASSWORD
 			)				
 		);
 		
