@@ -28,9 +28,31 @@ function crear(str){ return document.createElement(str);}
 
 
 var verFormRegistroUser = $('traerFormRegistroUser');
-addEvent(window,'DOMContentLoaded',hacerAlgo);
+addEvent(window,'DOMContentLoaded',paginaCargada);
+function paginaCargada(){
+	var verFormRegistroUser = $('traerFormRegistroUser');
+	var abm_users = $('abm_users');
+	var abm_prods = $('abm_prods');
+	var traerPeliculaBtn = $('traerPeliculaBtn');
+	var altaPeliculaBtn = $('altaPeliculaBtn');
+	var editarPeliculaBtn = $('editarPeliculaBtn');
+	var formLogin = $('formLogin');
 
+	if(formLogin){
+		addEvent(formLogin,'submit',validarLogin);	
+	}
+	if(verFormRegistroUser){
+		addEvent(verFormRegistroUser,'click',traer_forms);	
+	}
+	if(abm_users){
+		addEvent(abm_users,'click',traer_abm_users);	
+	}
+	if(abm_prods){
+		addEvent(abm_prods,'click',traer_abm_prods);	
+	}
+}
 
+// login y registro inicial 
 function traer_forms(){
 	ajaxRequest({
 		url: 'GestionUsr/form_new_user.php',
@@ -59,8 +81,6 @@ function traer_forms(){
 					$('tituloForm').textContent = 'Registrate';
 					$('traerFormRegistroUser').textContent = 'Login';
 					var altaUsuarioBtn = $('altaUsuarioBtn');
-					console.info($('formNewUser'))
-
 					addEvent($('formNewUser'),'submit',validarFormNewUser);
 				}
 			}				
@@ -91,8 +111,10 @@ function traer_forms(){
 		}
 	});
 }
+
+//Mostrar CRUD de usuarios
 function traer_abm_users(){
-	
+	//Enlistaros
 	ajaxRequest({
 		url: 'GestionUsr/lista_users.php',
 		success: function(rta) {
@@ -105,58 +127,85 @@ function traer_abm_users(){
 				var div = $('lista_users_abm');
 				div.innerHTML = rta;
 			}
-		
+			//Agregar evento a Boton Listar Usuario
 			addEvent($('interruptor_add_user'),'click',mostrarform_users);
+
+			//agregar eventos a los botones de borrar y modificar
 			if(document.getElementsByTagName('tr')){
 				var arrayTr = div.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
 				for (var i = 0; i < arrayTr.length; i++) {
 					var botonBorrar = arrayTr[i].getElementsByTagName('td')[2].getElementsByTagName('button')[0];
 					var botonModificar = arrayTr[i].getElementsByTagName('td')[1].getElementsByTagName('button')[0];
+
+					//boton borrar
 					addEvent(botonBorrar,'click',function(){
-						borrar(this);
-						function borrar(x){
-							ajaxRequest({
-								url: 'GestionUsr/borrarUsr.php?ID_USUARIO='+x.name+'/',
-								success: function(rta) {
-									rta = JSON.parse(rta);
-									var div = $('msg_user');
-									div.innerHTML = rta.message;
-									traer_abm_users();
-									
-								}
-							});
-						}
+							borrar(this);
+							function borrar(x){
+								ajaxRequest({
+									url: 'GestionUsr/borrarUsr.php?ID_USUARIO='+x.name+'/',
+									success: function(rta) {
+										rta = JSON.parse(rta);
+										var p = $('list_table_users').getElementsByTagName('div')[0].getElementsByTagName('p')[0];
+										p.innerHTML = rta.message;
+
+										var z = setInterval(function () {
+											traer_abm_users();
+											clearInterval(z);
+										},2000)
+									}
+								});
+							}
+						
 					});
+
+					//boton modificar			
 					addEvent(botonModificar,'click',function(){
 						modificar(this);
 						function modificar(x){
 							ajaxRequest({
 								url: 'GestionUsr/modificarUsr.php?ID_USUARIO='+x.name+'/',
 								success: function(rta) {
-									$('form_load').style.display = 'none';
+									//$('form_load').style.display = 'none';
 									$('list_modif').innerHTML = rta;
 									var botonEnviarModi = $('botonModificarUser');
-									addEvent(botonEnviarModi,'click',function(){
-										modificar_usuario2();
-										function modificar_usuario2(){
-											ajaxRequest({
-												metodo:'post',
-												url: 'GestionUsr/modificarUsr_2.php',
-												data: getFormEditarData(),
-												success: function(rta) {
-													rta = JSON.parse(rta);
-													var div = $('msg_user');
-													div.innerHTML = rta.message;
-													$('form_load').style.display = 'none';
-													traer_abm_users();
-												}
-											});
-										}
-										function getFormEditarData() {
-											return 'ID_USUARIO=' + $('ID_USUARIO').value +
-													'&NOMBRE=' + $('modifUsrName').value +
-													'&PASSWORD=' + $('modifUsrPass').value ;
+									addEvent($('formModif'),'submit',function(){
+										if($('formModif').NOMBRE.value == '' || $('formModif').PASSWORD.value == ''){
+												event.preventDefault();
+												$('errorUsual').getElementsByTagName('p')[0].innerHTML = 'Te falto llenar uno de los campos';
+												var z = setInterval(function () {
+													$('errorUsual').getElementsByTagName('p')[0].style.top = '-15%';
+													$('errorUsual').style.height = '0';
+													clearInterval(z);
+													
+												},2000)
+												$('errorUsual').getElementsByTagName('p')[0].style.top = '10%';
+												$('errorUsual').style.width = '100%';
+												$('errorUsual').style.height = '25%';
+										}else{
+											event.preventDefault();
+											modificar_usuario2();
+											function modificar_usuario2(){
+												ajaxRequest({
+													metodo:'post',
+													url: 'GestionUsr/modificarUsr_2.php',
+													data: getFormEditarData(),
+													success: function(rta) {
+														rta = JSON.parse(rta);
+														var p = $('list_table_users').getElementsByTagName('div')[0].getElementsByTagName('p')[0];
+														p.innerHTML = rta.message;
+														var z = setInterval(function () {
+															traer_abm_users();
+															clearInterval(z);
+														},2000)
+													}
+												});
 											}
+											function getFormEditarData() {
+												return 'ID_USUARIO=' + $('ID_USUARIO').value +
+														'&NOMBRE=' + $('modifUsrName').value +
+														'&PASSWORD=' + $('modifUsrPass').value ;
+											}
+										}
 									});
 
 								}
@@ -169,8 +218,10 @@ function traer_abm_users(){
 		}
 	});
 }
+
+//Mostrar CRUD de productos
 function traer_abm_prods(){
-	
+	//listar productos
 	ajaxRequest({
 		url: 'GestionProd/lista_prods.php',
 		success: function(rta) {
@@ -183,13 +234,17 @@ function traer_abm_prods(){
 				div.innerHTML = rta;
 			}
 
-		
+			// boton Agregar productos
 			addEvent($('interruptor_add_prod'),'click',mostrarform_prods);
+
+			//Botones de borrar y modificar productos de la tabla
 			if(document.getElementsByTagName('tr')){
 				var arrayTr = div.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
 				for (var i = 0; i < arrayTr.length; i++) {
 					var botonBorrar = arrayTr[i].getElementsByTagName('td')[2].getElementsByTagName('button')[0];
 					var botonModificar = arrayTr[i].getElementsByTagName('td')[1].getElementsByTagName('button')[0];
+
+					//boton borrar Producto
 					addEvent(botonBorrar,'click',function(){
 						borrar(this);	
 						function borrar(x){
@@ -197,39 +252,59 @@ function traer_abm_prods(){
 								url: 'GestionProd/borrarProd.php?ID_PRODUCTOS='+x.name+'/',
 								success: function(rta) {
 									rta = JSON.parse(rta);
-									var div = $('msg_prod');
-										div.innerHTML = rta.message;
-									traer_abm_prods();
+									var p = $('list_table_prods').getElementsByTagName('div')[0].getElementsByTagName('p')[0];
+									p.innerHTML = rta.message;
+
+									var z = setInterval(function () {
+										traer_abm_prods();
+										clearInterval(z);
+									},2000)
 								
 								}
 							});
 						}
 					});
+
+					//boton modificar producto
 					addEvent(botonModificar,'click',function(){
-						
 						(function(x){
 							ajaxRequest({
 								url: 'GestionProd/modificarProd.php?ID_PRODUCTOS='+x.name+'/',
 								success: function(rta) {
-									$('form_load_prods').style.display = 'none';
 									$('list_modif_prods').innerHTML = rta;
 									var botonEnviarModi = $('botonModificarProd');
-									botonEnviarModi.addEventListener('click',function(){
-										
-										(function(){
-											ajaxRequest({
-												metodo:'post',
-												url: 'GestionProd/modificarProd_2.php?',
-												data: getFormEditarData(),
-												success: function(rta) {
-													rta = JSON.parse(rta);
-													var div = $('msg_prod');
-													div.innerHTML = rta.message;
-													$('form_load_prods').style.display = 'none';
-													traer_abm_prods();
-												}
-											});
-										})();
+									addEvent($('formModif'),'submit',function(){
+											if($('formModif').NOMBRE.value == ''){
+												event.preventDefault();
+												$('errorUsual').getElementsByTagName('p')[0].innerHTML = 'Te falto llenar uno de los campos';
+												var z = setInterval(function () {
+													$('errorUsual').getElementsByTagName('p')[0].style.top = '-15%';
+													$('errorUsual').style.height = '0';
+													clearInterval(z);
+													
+												},2000)
+												$('errorUsual').getElementsByTagName('p')[0].style.top = '10%';
+												$('errorUsual').style.width = '100%';
+												$('errorUsual').style.height = '25%';
+										}else{
+											event.preventDefault();
+											(function(){
+												ajaxRequest({
+													metodo:'post',
+													url: 'GestionProd/modificarProd_2.php?',
+													data: getFormEditarData(),
+													success: function(rta) {
+														rta = JSON.parse(rta);
+														var p = $('list_table_prods').getElementsByTagName('div')[0].getElementsByTagName('p')[0];
+														p.innerHTML = rta.message;
+														var z = setInterval(function () {
+															traer_abm_prods();
+															clearInterval(z);
+														},2000)
+													}
+												});
+											})();
+										}	
 										function getFormEditarData() {
 											return 'ID_PRODUCTOS=' + $('ID_PRODUCTOS').value +
 													'&NOMBRE=' + $('NOMBRE_PROD').value +
@@ -249,7 +324,7 @@ function traer_abm_prods(){
 		}
 	});
 }
-
+//traer form agregar producto
 function mostrarform_prods(){
 	ajaxRequest({
 		url: 'GestionProd/form_new_prod.php',
@@ -257,10 +332,11 @@ function mostrarform_prods(){
 
 			$('subcaja_prods').innerHTML = rta;
 			$('interruptor_add_prod').setAttribute('name','1'); 
+
+			//cambiar evento del boton para cerrar form agregar productos
 			removeEvent($('interruptor_add_prod'),'click',mostrarform_prods);
 			$('interruptor_add_prod').innerHTML = "Nuevo Producto";
-			
-			addEvent($('interruptor_add_prod'),'click',function(){
+				addEvent($('interruptor_add_prod'),'click',function(){
 				
 				if($('formNewProd')){
 					$('subcaja_prods').removeChild($('formNewProd'));
@@ -273,70 +349,101 @@ function mostrarform_prods(){
 					addEvent($('interruptor_add_prod'),'click',mostrarform_prods);
 				}
 			});
+
+			//evento de agregar boton y su validacion
 			var altaProductoBtn = $('altaProductoBtn');
-			addEvent(altaProductoBtn,'click',agregarProducto);
-
-			function agregarProducto(){
-				ajaxRequest({
-					metodo:'post',
-					url:'GestionProd/altaProd.php',
-					data: getFormAltaDataProd(),
-					success:function(rta){
-						rta = JSON.parse(rta);
-						var div = $('msg_prod');
-						div.innerHTML = rta.message;
+			addEvent($('formNewProd'),'submit',function(){
+				//si esta vacion mostrar el error usual
+				event.preventDefault();
+				if($('formNewProd').NOMBRE.value == ''){
+					$('errorUsual').getElementsByTagName('p')[0].innerHTML = 'Te falto llenar el campo obligatorio';
+					var z = setInterval(function () {
+						$('errorUsual').getElementsByTagName('p')[0].style.top = '-15%';
+						$('errorUsual').style.height = '0';
+						clearInterval(z);
 						
-						traer_abm_prods();
-						
-						mostrarform_prods();
-					}
-
-				});
-			}
+					},2000)
+					$('errorUsual').getElementsByTagName('p')[0].style.top = '10%';
+					$('errorUsual').style.width = '100%';
+					$('errorUsual').style.height = '25%';
+				}
+				//si no, hacer la consulta y traer la respuesta del servidor 
+				else{
+					ajaxRequest({
+						metodo:'post',
+						url:'GestionProd/altaProd.php',
+						data: getFormAltaDataProd(),
+						success:function(rta){
+							rta = JSON.parse(rta);
+							if($('list_table_prods')){
+								var p = $('list_table_prods').getElementsByTagName('div')[0].getElementsByTagName('p')[0];
+							}else{
+								var p = $('errorUsual').getElementsByTagName('p')[0];
+							}
+							p.innerHTML = rta.message;
+							if($('list_table_prods')){
+								var z = setInterval(function () {
+									traer_abm_prods();
+									mostrarform_prods();
+									clearInterval(z);
+								},2000)	
+							}else{
+								var z = setInterval(function () {
+									clearInterval(z);
+								},2000)
+							}
+						}
+					});
+				}
+			});
 		}
 	});
 }
-
+// treaer y validar registro de usuarios
 function mostrarform_users(){
 	ajaxRequest({
 		url: 'GestionUsr/form_new_user.php',
 		success: function(rta) {
 
-			$('subcaja').innerHTML = rta;
+			$('subcaja_users').innerHTML = rta;
 			$('interruptor_add_user').setAttribute('name','1'); 
+
+			//cambiar evento del boton para cerrar form agregar usuarios
 			removeEvent($('interruptor_add_user'),'click',mostrarform_users);
 			$('interruptor_add_user').innerHTML = "Nuevo Usuario";
-			
-			var altaUsuarioBtn = $('altaUsuarioBtn');
-			addEvent(altaUsuarioBtn,'click',function (){
-				ajaxRequest({
-					metodo:'post',
-					url:'GestionUsr/agregarUsr.php',
-					data: getFormAltaData(),
-					success:function(rta){
-						rta = JSON.parse(rta);
-						var div = $('msg_user');
-						div.innerHTML = rta.message;
-
-						traer_abm_users();
-						mostrarform_users();
-					}
-
-				});
+				addEvent($('interruptor_add_user'),'click',function(){
+				
+				if($('formNewUser')){
+					$('subcaja_users').removeChild($('formNewUser'));
+					var btn_menu = $('interruptor_add_user');	
+					
+					removeEvent($('interruptor_add_user'),'click',function(){
+						$('subcaja_users').removeChild($('formNewUser'));
+					});
+					
+					addEvent($('interruptor_add_user'),'click',mostrarform_users);
+				}
 			});
+
+			//evento de alta usuarios
+			var altaUsuarioBtn = $('altaUsuarioBtn');
+			addEvent($('formNewUser'),'submit',validarFormNewUser);
+			
+			
 		}
 	});
 }
 
 function getFormAltaData() {
-		return 'NOMBRE='+$('altaUsuario').value +'&PASSWORD='+$('altaPassword').value;
+	return 'NOMBRE='+$('altaUsuario').value +'&PASSWORD='+$('altaPassword').value;
 }
 function getFormAltaDataProd() {
 		return 'NOMBRE=' + $('altaNombreProd').value +
 				'&CATEGORIA=' + $('altaCategoriaProd').value +
 				'&MARCA=' + $('aAltaPrecioProd').value +
 				'&PRECIO=' + $('aAltaPrecioProd').value;
-	}
+}
+//validar campos vacios login
 function validarLogin(event){
 	if($('formLogin').NOMBRE.value == '' || $('formLogin').PASSWORD.value == ''){
 		event.preventDefault();
@@ -352,54 +459,53 @@ function validarLogin(event){
 		$('errorUsual').style.height = '25%';
 	}
 }
+//enviar y validar alta usuarios
 function validarFormNewUser(event){
-	
-	
 	if($('formNewUser').NOMBRE.value == '' || $('formNewUser').PASSWORD.value == ''){
-		
 		event.preventDefault();
 		$('errorUsual').getElementsByTagName('p')[0].innerHTML = 'Te falto llenar uno de los campos';
 		var z = setInterval(function () {
 			$('errorUsual').getElementsByTagName('p')[0].style.top = '-15%';
 			$('errorUsual').style.height = '0';
 			clearInterval(z);
-			
 		},2000)
 		$('errorUsual').getElementsByTagName('p')[0].style.top = '10%';
 		$('errorUsual').style.width = '100%';
 		$('errorUsual').style.height = '25%';
-	}/*else{
-		ajaxRequest({
-			metodo:'post',
-			url:'GestionUsr/agregarUsr.php',
-			data: getFormAltaData(),
-			success:function(rta){
-				rta = JSON.parse(rta);
-				var div = $('exito');
-				div.innerHTML = rta.message;
-			}
-		});
-	}*/
+	}else{
+		if($('list_table_users')){
+			event.preventDefault();
+		}
+		
+		
+				ajaxRequest({
+				metodo:'post',
+				url:'GestionUsr/agregarUsr.php',
+				data: getFormAltaData(),
+				success:function(rta){
+						rta = JSON.parse(rta);
+						if($('list_table_users')){
+							var p = $('list_table_users').getElementsByTagName('div')[0].getElementsByTagName('p')[0];
+						}else{
+							var p = $('errorUsual').getElementsByTagName('p')[0];
+						}
+						p.innerHTML = rta.message;
+						if($('list_table_users')){
+							var z = setInterval(function () {
+								traer_abm_users();
+								clearInterval(z);
+							},2000)	
+						}else{
+							var z = setInterval(function () {
+								
+								clearInterval(z);
+							},2000)
+						}
+				}
+				
+			});
+			
+		
+	}
 }
-function hacerAlgo(){
-	var verFormRegistroUser = $('traerFormRegistroUser');
-	var abm_users = $('abm_users');
-	var abm_prods = $('abm_prods');
-	var traerPeliculaBtn = $('traerPeliculaBtn');
-	var altaPeliculaBtn = $('altaPeliculaBtn');
-	var editarPeliculaBtn = $('editarPeliculaBtn');
-	var formLogin = $('formLogin');
 
-	if(formLogin){
-		addEvent(formLogin,'submit',validarLogin);	
-	}
-	if(verFormRegistroUser){
-		addEvent(verFormRegistroUser,'click',traer_forms);	
-	}
-	if(abm_users){
-		addEvent(abm_users,'click',traer_abm_users);	
-	}
-	if(abm_prods){
-		addEvent(abm_prods,'click',traer_abm_prods);	
-	}
-}

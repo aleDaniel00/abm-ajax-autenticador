@@ -10,8 +10,8 @@
 		?>
 				
 		<h2>Modificar <strong><?php echo $fila["NOMBRE"]?></strong></h2>
-		<div id="formModif">
-			
+		<form id="formModif" method="post">
+			<div id="errorUsual"><p></p></div>
 			<div>
 				<label>Nombre Producto </label>
 				<input type="text" id="NOMBRE_PROD" name="NOMBRE" value="<?php echo $fila["NOMBRE"];?>">
@@ -38,9 +38,9 @@
 			</div>
 			
 			
-			<button id="botonModificarProd" name="<?php echo $fila["ID_PRODUCTOS"];?>">Aplicar cambios</button>
+			<button id="botonModificarProd" name="<?php echo $fila["ID_PRODUCTOS"];?>">Modificar</button>
 			
-		</div>
+		</form>
 		<?php 
 	} 
 	?>

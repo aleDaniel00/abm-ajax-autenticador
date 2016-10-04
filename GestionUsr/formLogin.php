@@ -5,6 +5,8 @@
 	unset( $_SESSION['error'] );
 	}
 	?>
+	<div id="exito"></div>
+	<div id="errorUsual"><p></p></div>
 	<div>
 		<input type="text" name="NOMBRE" placeholder="NOMBRE">
 	</div>
@@ -13,6 +15,6 @@
 	</div>
 	 <div>
 		<input type="submit" value="Entrar">
-		<!--<a id="botonRegistrarme" href="index.php?seccion=registro">Registrarme</a> -->
+		
 	</div>
 </form>

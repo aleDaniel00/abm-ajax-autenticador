@@ -1,5 +1,6 @@
-	<div id="formNewProd">
+	<form id="formNewProd" method="post">
 		<div id="exito_prod"></div>
+		<div id="errorUsual"><p></p></div>
 		<div>
 			<label for="altaNombreProd">Escribe el nombre del nuevo producto: </label>
 			<input id="altaNombreProd" type="text" name="NOMBRE" placeholder="Campo Obligatorio">
@@ -16,6 +17,6 @@
 			<label for="aAltaPrecioProd">Que precio tiene a la venta la unidad? : Pesos
 			<input id="aAltaPrecioProd" name="PRECIO" type="number" value="10" min="10" max="500" /> </label>
 		</div>
-		<button id="altaProductoBtn">Registrar un nuevo producto</button>
-	</div>
+		<button id="altaProductoBtn">Registrar producto</button>
+	</form>
 </li>

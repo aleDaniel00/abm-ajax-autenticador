@@ -1,4 +1,4 @@
-	<form id="formNewUser" name="formNewUser" action="GestionUsr/agregarUsr.php" method="post">
+	<form id="formNewUser" name="formNewUser" method='post'  >
 		<div id="exito"></div>
 		<div id="errorUsual"><p></p></div>
 		<div >
@@ -9,6 +9,6 @@
 			<label for="altaPassword">Escribe el password: </label>
 			<input id="altaPassword" type="password" name="PASSWORD" >
 		</div>
-		<button type="submit" value="submit" id="altaUsuarioBtn">Registrar nuevo usuario</button>
+		<button type="submit" value="submit" id="altaUsuarioBtn">Registrar usuario</button>
 	</form>
 </li>
