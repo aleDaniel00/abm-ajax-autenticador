@@ -16,7 +16,7 @@
 	
 	<?php
 	if( empty($_SESSION) || isset($_SESSION['error'])){
-		echo '<div id="barra_inicial"> <h1>Parcial 1 - tecno 4</h1><p >No has iniciado sesion!</p></div>'; 
+		echo '<div id="barra_inicial"> <h1>Parcial 1 - tecno 4</h1><p id="info">No has iniciado sesion!</p></div>'; 
 	}
 	if( ! isset($_SESSION['ID_USUARIO']) ){
 	?>		
@@ -42,6 +42,7 @@
 						}
 						?>
 						<div id="errorUsual"><p></p></div>
+						<div id="exito"></div>
 						<div>
 							<input type="text" name="NOMBRE" placeholder="NOMBRE">
 						</div>
@@ -78,14 +79,18 @@
 		<ul id="contenedor_items">
 			<li id="encabezado"><h1>Administrador</h1></li>
 			<li class="menuabm">
-				<a id="abm_users">Usuarios</a>
-				<ul id="lista_users_abm"></ul>
+				<a id="abm_users">Listar y agregar Usuarios</a>
+				<ul id="lista_users_abm">
+					<div id="errorUsual"><p></p></div>
+				</ul>
 
 				
 			</li>
 			<li class="menuabm">
-				<a id="abm_prods">Productos</a>
-				<ul id="lista_prods_abm"></ul>
+				<a id="abm_prods">Listar y agregar Productos</a>
+				<ul id="lista_prods_abm">
+					
+				</ul>
 
 			</li>
 		</ul>

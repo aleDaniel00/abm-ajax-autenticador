@@ -126,9 +126,7 @@ class Producto{
 				'message' => 'Error... :('
 			]);
 		}
-		//return $stmt->fetchAll();
-		
-		
+
 	}
 	function setID_PRODUCTOS($cod) {
 		$this->ID_PRODUCTOS = $cod;

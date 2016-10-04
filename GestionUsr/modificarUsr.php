@@ -3,13 +3,16 @@
 __autoload('Usuario');
 
 $id = $_GET['ID_USUARIO'];
+
+
 $nuevoUsr = Usuario::cargarDeArrayModif($id);
-		
+
 foreach($nuevoUsr as $fila) { 
 	?>
 	<h2>Modificar <strong><?php echo $fila["NOMBRE"]?></strong></h2>
 					
-	<div id="formModif">
+	<form id="formModif" method="post" >
+		<div id="errorUsual"><p></p></div>
 		<div>
 			<label>Nombre:</label>
 			<input id="modifUsrName" type="text" name="NOMBRE" value="<?php echo $fila["NOMBRE"];?>">
@@ -20,7 +23,7 @@ foreach($nuevoUsr as $fila) {
 		
 		<div>
 			<label>Password:</label>
-			<input id="modifUsrPass"type="text" name="PASSWORD" value="<?php echo $fila["PASSWORD"];?>">
+			<input id="modifUsrPass"type="text" name="PASSWORD" value="">
 		</div>
 		
 		
@@ -28,7 +31,7 @@ foreach($nuevoUsr as $fila) {
 		<button id="botonModificarUser" name="<?php echo $fila["ID_USUARIO"];?>">Aplicar cambios</button>
 		
 	
-	</div>
+	</form>
 		
 	<?php 
 } ?>

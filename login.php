@@ -6,7 +6,6 @@ __autoload('DBConnection');
 $usuario = $_POST['NOMBRE'];
 $pwd = $_POST['PASSWORD'];
 $usr = Usuario::login($usuario,$pwd);
-		
 if(empty($usr)){
 	//error de usuario o clave porque ninguno coincide con los datos pedidos.
 	$_SESSION['error'] = 'Esta mal tu usuario o clave';

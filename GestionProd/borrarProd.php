@@ -5,5 +5,5 @@
 	__autoload('DBConnection');
 
 $id = $_GET['ID_PRODUCTOS']	;
-$nuevaProd = Producto::borrar($id);
+Producto::borrar(intval($id));
 

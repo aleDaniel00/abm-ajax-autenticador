@@ -23,20 +23,14 @@ class Usuario {
 	public static function login($mail,$pwd){
 		$query = "SELECT * FROM usuarios WHERE NOMBRE = ? AND PASSWORD = ?";
 		$stmt = DBConnection::getStatement($query);
+		
 		$stmt->execute(array($mail,$pwd));
+		
 		return $stmt->fetch();
 		
 	}
 	public function cargarDeArray($fila) {
-		var_dump(phpversion());
-		//phpversion();
-		
 		foreach($fila as $prop => $valor) {
-			var_dump($fila);
-			
-			if($prop == 'PASSWORD'){
-				//$prop = password_hash($fila,PASSWORD_DEFAULT);
-			}
 			$this->$prop = $valor;
 		}
 	}

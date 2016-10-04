@@ -6,7 +6,7 @@ __autoload('DBConnection');
 
 <!--<li class="tituloDos"><h2>Tabla-lista de Usuarios y formulario de alta</h2></li>-->
 <li id="list_table_users">
-	<div id="msg_user"></div>
+	<div id="msg_user"><p></p></div>
 	<table border="1">
 		<thead>
 			<tr>
@@ -40,23 +40,23 @@ __autoload('DBConnection');
 				?> 
 	</table>
 </li>
-		<li id="form_load">
-			<?php
-						if( isset($_GET['nuevoUser'])){
-						echo '<div id="grabado_exitoso">Nuevo usuario ha sido agregado exitosamente!</div>';
-						unset( $_GET['nuevoUser'] );
-						}
-						?>
-						<?php
-						if( isset($_GET['error'])){
-						echo '<div id="error_uno">Usuario ya existente, intente registrarse  una vez mas!</div>';
-						unset( $_GET['error'] );
-						}
-						?>
-			<button id="interruptor_add_user" class="text_btn" name='0'>
-			Nuevo Usuario
-			
-			</button>
-		<div id="subcaja"></div>
-		</li>
-		<li id="list_modif"></li>
+<li id="form_load">
+	<?php
+				if( isset($_GET['nuevoUser'])){
+				echo '<div id="grabado_exitoso">Nuevo usuario ha sido agregado exitosamente!</div>';
+				unset( $_GET['nuevoUser'] );
+				}
+				?>
+				<?php
+				if( isset($_GET['error'])){
+				echo '<div id="error_uno">Usuario ya existente, intente registrarse  una vez mas!</div>';
+				unset( $_GET['error'] );
+				}
+				?>
+	<button id="interruptor_add_user" class="text_btn" name='0'>
+	Nuevo Usuario
+	
+	</button>
+<div id="subcaja_users"></div>
+</li>
+<li id="list_modif"></li>
