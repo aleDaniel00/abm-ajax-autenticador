@@ -4,7 +4,7 @@ __autoload('Producto');
 __autoload('DBConnection');
 ?>
 
-<!--<li class="tituloDos"><h2>Tabla-lista de Usuarios y formulario de alta</h2></li>-->
+
 <li id="list_table_prods">
 	<div id="msg_user"><p></p></div>
 	<table border="1">

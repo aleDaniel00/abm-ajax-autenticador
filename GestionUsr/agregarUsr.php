@@ -8,9 +8,6 @@ if($_SERVER['REQUEST_METHOD'] == "POST") {
 	//$usr->cargarDatosDeForm();
 
 	$usr->cargarDeArray($_POST);
-	
-	
-	
 	$usr->grabar();
 	
 	

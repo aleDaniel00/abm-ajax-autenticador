@@ -60,7 +60,7 @@
 			<div id="caja_externa"> <a id="traerFormRegistroUser">Registrate</a></div>
 		</div>
 				<?php
-	}else{ //tenes session[id] o sea que estas logueado
+	}else{ //tienes session[id] o sea que estas logueado
 				?>
 				<div  id="contenidoLogin">
 					<h2>Logueado como:</h2>
@@ -81,7 +81,7 @@
 			<li class="menuabm">
 				<a id="abm_users">Listar y agregar Usuarios</a>
 				<ul id="lista_users_abm">
-					<div id="errorUsual"><p></p></div>
+					
 				</ul>
 
 				

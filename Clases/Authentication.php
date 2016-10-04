@@ -1,10 +1,11 @@
 <?php
 
 __autoload('DBConnection');
+//queda pendiente para consulta al profe de como aplicar password_hash(), a nuestro abm!!!!!!!!!!!!
+
 
 /*
 class Authentication {
-	private $USUARIO;
 	private $PASSWORD;
 	
 	

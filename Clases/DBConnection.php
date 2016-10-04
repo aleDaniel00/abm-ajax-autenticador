@@ -24,8 +24,7 @@ class DBConnection {
 	}
 	
 	public static function getStatement($query) {
-		/*$db = self::getConnection();
-		return $db->prepare($query);*/
+		
 		return self::getConnection()->prepare($query);
 	}
 }
